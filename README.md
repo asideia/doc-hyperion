@@ -1,35 +1,86 @@
-# Hyperion Console
+# 📖 Hyperion Tweaks - Wiki Oficial
 
-## Descritivo da Aplicação
+Bem-vindo à documentação técnica do **Hyperion Tweaks**. Este guia explica o funcionamento interno da ferramenta, as categorias de modificação e as melhores práticas de uso.
 
-O Hyperion Console é uma ferramenta de software avançada, projetada para otimizar o desempenho do sistema operacional e simplificar o gerenciamento de licenças de software. Atuando como um centro de controle unificado, ele permite que os usuários monitorem a saúde do sistema, apliquem configurações de otimização de forma segura e gerenciem o ciclo de vida de suas licenças digitais.
+---
 
-## Para que Serve
+## 📑 Sumário
+1. [Introdução](#introdução)
+2. [Arquitetura de Modificação](#arquitetura-de-modificação)
+3. [Categorias de Tweaks](#categorias-de-tweaks)
+4. [Guia de Uso (Passo a Passo)](#guia-de-uso)
+5. [Segurança e Pontos de Restauração](#segurança)
 
-O principal propósito do Hyperion Console é garantir que o hardware e o software do usuário operem em seu potencial máximo, minimizando gargalos e instabilidade. Ele oferece funcionalidades para:
+---
 
-1.  **Otimização de Performance:** Ajustes finos em configurações do sistema operacional para reduzir a latência e aumentar a capacidade de resposta, sendo ideal para ambientes que exigem alta performance.
-2.  **Gerenciamento de Licenças:** Centralização da ativação, desativação e monitoramento do status de suas licenças de produtos Hyperion.
-3.  **Diagnóstico:** Fornecimento de dados essenciais sobre o ambiente de execução (versão do app, sistema operacional) para facilitar o suporte técnico.
+## 1. Introdução <a name="introdução"></a>
+O Hyperion Tweaks não é apenas um "limpador" de arquivos. É uma ferramenta de **ajuste fino de kernel e registros**, projetada para alinhar o comportamento do Windows com as necessidades de aplicações de tempo real (Jogos Competitivos).
 
-## Público-Alvo
+---
 
-O Hyperion Console é destinado a:
+## 2. Arquitetura de Modificação <a name="arquitetura-de-modificação"></a>
+A ferramenta opera em três níveis principais:
 
-* **Usuários Finais Avançados:** Indivíduos que buscam o máximo desempenho de seus computadores para jogos, edição de vídeo, modelagem 3D e outras tarefas intensivas.
-* **Empresas e Profissionais de TI:** Equipes que necessitam de uma ferramenta confiável para manter frotas de máquinas otimizadas e garantir a conformidade e a gestão eficaz de ativos de software (licenças).
+*   **Registry Level (Regedit):** Modifica chaves de configuração que o Windows não expõe na interface comum (GUI).
+*   **Service Management:** Desativa o agendamento de tarefas e serviços que geram picos de uso de CPU (*spikes*).
+*   **Command Line Execution:** Utiliza comandos via `PowerShell` e `CMD` para reconfigurar subsistemas como a rede e o gerenciamento de energia.
 
-## Versões Atuais da Aplicação
+---
 
-| Tipo de Versão | Última Versão Estável | Observações |
-| :--- | :--- | :--- |
-| **Cliente Desktop** | 0.1.0 | Primeira versão pública. |
+## 3. Categorias de Tweaks <a name="categorias-de-tweaks"></a>
 
-**Nota:** Para a versão mais recente e os *release notes* detalhados, consulte a documentação oficial.
+### ⚡ Performance de Processamento (CPU)
+*   **Core Unparking:** O Windows costuma "adormecer" núcleos da CPU para economizar energia. Nós forçamos o estado ativo para eliminar a latência de ativação do núcleo.
+*   **Win32PrioritySeparation:** Ajustamos o *quantum* (tempo de atenção) da CPU para dar prioridade máxima a aplicações em primeiro plano (o seu jogo).
 
-## Suporte
+### 🖱️ Redução de Latência (Input Lag)
+*   **Disable Pointer Precision:** Remove a aceleração do mouse nativa do Windows no registro, garantindo precisão 1:1.
+*   **Keyboard DataQueueSize:** Reduz o tamanho da fila de dados do teclado para que os comandos sejam processados mais rapidamente pelo processador.
 
-Em caso de dúvidas técnicas, problemas com licenças ou relatórios de bugs, entre em contato com nossa equipe de suporte.
+### 🌐 Otimização de Rede
+*   **TCP No Delay:** Desabilita o algoritmo de Nagle, enviando pacotes de rede imediatamente, reduzindo o jitter e estabilizando o ping.
+*   **Network Throttling Index:** Remove o limite que o Windows impõe ao tráfego de rede quando o processador está sob carga pesada.
 
-* **E-mail de Suporte:** suporte@hyperion.com.br
-* **Documentação Completa:** Consulte a documentação oficial para guias de uso e solução de problemas.
+---
+
+## 4. Guia de Uso <a name="guia-de-uso"></a>
+
+### Passo 01: Preparação
+Antes de qualquer alteração, feche todos os programas abertos e navegadores. O Hyperion precisa de acesso exclusivo a certas chaves de registro.
+
+### Passo 02: Criação de Backup
+1. Vá até a aba de **Segurança/Backup**.
+2. Clique em **Criar Ponto de Restauração**.
+3. Aguarde a confirmação do sistema.
+
+### Passo 03: Aplicação dos Tweaks
+Recomendamos aplicar as modificações por seções:
+1. Aplique os tweaks de **Sistema**.
+2. Reinicie o computador.
+3. Aplique os tweaks de **Rede**.
+4. Reinicie novamente.
+> **Dica:** Aplicar tudo de uma vez dificulta a identificação de qual modificação trouxe o melhor benefício para o seu hardware específico.
+
+---
+
+## 5. Segurança <a name="segurança"></a>
+
+### Como reverter uma modificação?
+Se você sentir que o sistema ficou instável ou se algum software de trabalho (ex: Adobe Premiere, AutoCAD) parou de funcionar corretamente:
+1. Abra o **Hyperion Tweaks**.
+2. Vá em **Restauração**.
+3. Selecione o ponto criado anteriormente e clique em **Restaurar**.
+
+### Logs de Erro
+A ferramenta gera logs em `%APPDATA%/HyperionTweaks/logs`. Caso encontre um erro ao aplicar um tweak, anexe esse arquivo ao abrir uma *Issue* no GitHub.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+*   **Frontend:** React + Tailwind CSS
+*   **Backend:** Rust (Tauri Framework)
+*   **Ícones:** Lucide React
+*   **Target:** Windows 10/11 (x64)
+
+---
+*Documentação atualizada em: Maio de 2026*
